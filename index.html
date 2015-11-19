@@ -3,8 +3,9 @@
 <head>
   <title>Red5 Pro HTML5 HLS Example</title>
 
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+  <link href="http://vjs.zencdn.net/5.0/video-js.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -33,16 +34,18 @@
 
     <div class="row">
       <div class="embed-responsive embed-responsive-16by9">
-        <video autobuffer autoloop loop controls>
-          <source src="/media/video.oga">
-          <source src="/media/video.m4v">
+        <video autobuffer controls preload="auto" class="video-js vjs-default-skin" data-setup="{}">
+          <source src="media/demo.mp4">
         </video>
       </div>
     </div>
   </div>
 
-  <script src="http://code.jquery.com/jquery-2.1.4.min.js" defer></script>
-  <script src="js/bootstrap.min.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <script src="http://vjs.zencdn.net/5.0/video.min.js" ></script>
+  <script src="js/videojs-contrib-media-sources/videojs-media-sources.js"></script>
+  <script src="js/videojs-contrib-hls/videojs.hls.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
