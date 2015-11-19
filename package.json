@@ -4,7 +4,8 @@
   "description": "Red5 Pro HTML5 HLS example",
   "main": "index.js",
   "scripts": {
-    "start": "PORT=3000 node index.js",
+    "publish": "node __buildscripts/copy-bootstrap.js",
+    "start": "npm run publish && PORT=3000 node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,11 +29,13 @@
   },
   "homepage": "https://github.com/red5pro/red5pro-html5-hls#readme",
   "dependencies": {
+    "bootstrap": "^3.3.5",
     "video.js": "^5.2.1",
     "videojs-contrib-hls": "^0.17.9"
   },
   "devDependencies": {
     "connect": "^3.4.0",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "shelljs": "^0.5.3"
   }
 }
