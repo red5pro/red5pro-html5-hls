@@ -2,8 +2,47 @@
 <html>
 <head>
   <title>Red5 Pro HTML5 HLS Example</title>
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
 </head>
 <body>
-  
+  <div class="container">
+    <div class="page-header">
+      <h1>Red5 Pro HTML5 HLS Example</h1>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">Your stream settings</div>
+      <div class="panel-body">
+        <form accept-charset="utf-8" id="stream-settings-form" class="form-inline">
+          <div class="form-group form-group-sm">
+            <label for="stream-settings-form-host" class="sr-only control-label">Stream Host</label>
+            <input type="text" name="streamHost" id="stream-settings-form-host" value="" placeholder="Stream host, e.g. localhost" class="form-control">
+          </div>
+
+          <div class="form-group form-group-sm">
+            <label for="stream-settings-form-port" class="sr-only control-label">Stream Port</label>
+            <input type="text" name="streamPort" id="stream-settings-form-port" value="" placeholder="Stream port, e.g. 8080" class="form-control">
+          </div>
+
+          <button type="submit" id="stream-settings-form-submit" class="btn btn-default btn-sm">Save</button>
+        </form>
+      </div> <!-- div.panel-body -->
+    </div> <!-- div.panel.panel-default -->
+
+    <div class="row">
+      <div class="embed-responsive embed-responsive-16by9">
+        <video autobuffer autoloop loop controls>
+          <source src="/media/video.oga">
+          <source src="/media/video.m4v">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js" defer></script>
+  <script src="js/bootstrap.min.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
