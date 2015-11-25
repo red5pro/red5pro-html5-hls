@@ -1,9 +1,2 @@
 node_modules/
-css/video-js.css
-css/video-js.min.css
-font/
-js/video.js*
-js/video.min.js*
-js/videojs-media-sources.min.js
-js/videojs.hls.min.js
-video-js.swf
+js/bundle.js
