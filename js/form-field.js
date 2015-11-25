@@ -3,6 +3,8 @@
 class FormField {
   constructor (field) {
     this.field = field
+    this.name = field.name
+    this.id = field.id
     this.originalValue = field.value
   }
 
@@ -11,10 +13,10 @@ class FormField {
   }
 
   update () {
-    this.originalValue = this.value()
+    this.originalValue = this.value
 
     return this
   }
 }
 
-module.exports = FormField
+export default FormField
