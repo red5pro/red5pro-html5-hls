@@ -4,7 +4,9 @@
   "description": "Red5 Pro HTML5 HLS example",
   "main": "index.js",
   "scripts": {
-    "start": "PORT=3000 node index.js",
+    "lint": "standard js/*.js && standard js/**/*.js",
+    "publish": "npm run lint && node __buildscripts/copy-videojs-sources.js && browserify -d -e js/main.js -o js/bundle.js -t [ babelify --presets [ es2015 ] ]",
+    "start": "npm run publish && PORT=3000 node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,9 +29,27 @@
     "url": "https://github.com/red5pro/red5pro-html5-hls/issues"
   },
   "homepage": "https://github.com/red5pro/red5pro-html5-hls#readme",
-  "dependencies": {},
+  "dependencies": {
+    "video.js": "^5.2.3",
+    "videojs-contrib-media-sources": "^2.4.1"
+  },
   "devDependencies": {
+    "babel-polyfill": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
     "connect": "^3.4.0",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "shelljs": "^0.5.3",
+    "standard": "^5.4.1",
+    "videojs-contrib-hls": "^0.17.9"
+  },
+  "standard": {
+    "ignore": [
+      "*.min.js",
+      "js/videojs-contrib-hls/",
+      "js/videojs-contrib-media-sources/",
+      "js/video.js"
+    ]
   }
 }
