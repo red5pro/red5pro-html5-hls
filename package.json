@@ -4,7 +4,7 @@
   "description": "Red5 Pro HTML5 HLS example",
   "main": "index.js",
   "scripts": {
-    "lint": "standard js/*.js && standard js/**/*.js",
+    "lint": "standard js/*.js --verbose && standard js/**/*.js --verbose",
     "publish": "npm run lint && browserify -d -e js/main.js -o js/bundle.js -t [ babelify --presets [ es2015 ] ]",
     "start": "npm run publish && PORT=3000 node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
