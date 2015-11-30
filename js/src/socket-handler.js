@@ -25,7 +25,7 @@ class SocketHandler extends CustomEventTarget {
 
     this.onmessage = function (e) {
       let d = JSON.parse(e.data || {})
-      console.log(`Internal onmessage with ${d} which has name ${d.name}`)
+
       if (d.name) {
         self.dispatchEvent('message', {evt: e, name: d.name, data: d.data})
       } else if (d.ping) {
@@ -39,7 +39,7 @@ class SocketHandler extends CustomEventTarget {
   }
 
   connect () {
-    this.socket = new WebSocket(`ws://${this.url}${this.context}${this.stream}`)
+    this.socket = new WebSocket(`${this.url}${this.context}${this.stream}`)
 
     this.socket.onopen = this.onopen
     this.socket.onclose = this.onclose

@@ -51,8 +51,18 @@ class FormHandler extends CustomEventTarget {
   valueForPartialIDWithDefault (partialID, deflt) {
     let field = this.fieldForPartialID(partialID)
 
-    if (field) return field.value
+    if (field && field.value) return field.value
     return deflt
+  }
+
+  get changeObject () {
+    return {
+      url: this.valueForPartialIDWithDefault('url-or-ip', 'http://example.com/'),
+      port: this.valueForPartialIDWithDefault('port', '5080'),
+      websocketPort: this.valueForPartialIDWithDefault('websocket-port', '6262'),
+      context: this.valueForPartialIDWithDefault('context', 'live'),
+      stream: this.valueForPartialIDWithDefault('stream', 'stream')
+    }
   }
 
   onFieldFocus (e) {
@@ -68,32 +78,18 @@ class FormHandler extends CustomEventTarget {
   }
 
   onFieldChange (e) {
-    let self = this
     this.setButtonState('primary')
 
-    this.dispatchEvent('inputchange', {
-      url: self.valueForPartialIDWithDefault('url-or-ip', 'http://example.com/'),
-      port: self.valueForPartialIDWithDefault('port', '5080'),
-      websocketPort: self.valueForPartialIDWithDefault('websocket-port', '6262'),
-      context: self.valueForPartialIDWithDefault('context', 'live'),
-      stream: self.valueForPartialIDWithDefault('stream', 'stream')
-    })
+    this.dispatchEvent('inputchange', this.changeObject)
   }
 
   onSubmit (e) {
-    let self = this
     this.hasSaved = true
     this.fields.forEach(x => x.update())
 
     this.setButtonState('default', 'Update')
 
-    this.dispatchEvent('change', {
-      url: self.valueForPartialIDWithDefault('url-or-ip', 'http://example.com/'),
-      port: self.valueForPartialIDWithDefault('port', '5080'),
-      websocketPort: self.valueForPartialIDWithDefault('websocket-port', '6262'),
-      context: self.valueForPartialIDWithDefault('context', 'live'),
-      stream: self.valueForPartialIDWithDefault('stream', 'stream')
-    })
+    this.dispatchEvent('change', this.changeObject)
 
     e.preventDefault()
     e.stopPropagation()

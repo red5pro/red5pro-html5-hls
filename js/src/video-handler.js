@@ -34,9 +34,9 @@ class VideoHandler {
       self.hlsSource.crossOrigin = 'anonymous'
       fallback.parentNode.insertBefore(self.hlsSource, fallback)
 
-      self.videojs = videojs(self.video)
-
-      resolve()
+      self.videojs = videojs(self.video, {}, function () {
+        resolve()
+      })
     })
   }
 
@@ -45,7 +45,7 @@ class VideoHandler {
   }
 
   onOptionsUpdate (url) {
-    this.addSource(url, VideoHandler.HLSType())
+    return this.addSource(url, VideoHandler.HLSType())
   }
 
   static HLSType () {
