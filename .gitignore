@@ -1,0 +1,9 @@
+*
+!./js/bundle.js
+!./js/videojs-media-sources.min.js
+!./js/videojs.hls.min.js
+!./media/demo.mp4
+!./videojs
+!./index.html
+!./LICENSE
+!./README.md
