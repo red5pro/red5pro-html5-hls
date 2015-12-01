@@ -4,6 +4,9 @@
 
 1. [Requirements](#requirements)
 2. [Getting Up and Running](#getting-up-and-running)
+  1. [For Local Development](#for-local-development)
+  2. [With a Prebuilt Distribution](#with-a-prebuilt-distribution)
+  3. [Building a Distribution](#building-a-distribution)
 3. [Overview of the HTML5 Client](#overview-of-the-html5-client)
 4. [Modifying](#modifying)
 
@@ -20,22 +23,38 @@ An example of how to build an HTML client for [Red5 Pro's](http://red5pro.com/) 
 
 ## Requirements
 
-This example requires that you have the following:
+This example requires that you have the following in order to use it:
 
-1. [Node/NPM](https://nodejs.org/) installed locally
-2. A [Red5 Pro][r5p] server running on a server, such as an AWS instance
-3. A mobile client to publish to your Red5 Pro server from, such as this [iOS example](https://github.com/red5pro/red5pro-ios-app) or this [Android example](https://github.com/red5pro/red5pro-android-app). Alternatively, using the [Red5 Pro Streaming SDK][r5s] you can build your own or incoporate streaming into your existing application(s)!
+1. A [Red5 Pro][r5p] server running on a server, such as an AWS instance
+2. A mobile client to publish to your Red5 Pro server from, such as this [iOS example](https://github.com/red5pro/red5pro-ios-app) or this [Android example](https://github.com/red5pro/red5pro-android-app). Alternatively, using the [Red5 Pro Streaming SDK][r5s] you can build your own or incoporate streaming into your existing application(s)!
+
+If you would like to **run, modify, or build it locally** you will also need the following:
+
+1. [Node/NPM](https://nodejs.org/)
 
 Make sure to set these up before you proceed! :+1:
 
 ## Getting Up and Running
 
+### For Local Development
+
 1. Clone the repo
 2. Inside the repo, run `npm install`
-3. Put an .mp4 file in the `media/` directory named `demo.mp4` - this will be used as a fallback
-4. After that, run `npm run start` which will transpile all the ES2015 source to ES5 Javascript and start a local Node server
+3. After that, run `npm run start` which will transpile all the ES2015 source to ES5 Javascript and start a local Node server
   1. If you'd prefer to run a different server, such as a Pyton server for instance, then you can just run `npm run publish` to transpile the ES2015 source to ES5 Javascript
-5. Open up [http://localhost:3000/](http://localhost:3000/) to see the Red5 Pro HLS HTML5 client example
+4. Open up [http://localhost:3000/](http://localhost:3000/) to see the Red5 Pro HLS HTML5 client example
+
+### With a Prebuilt Distribution
+
+Visit our [releases](./releases) to find a prebuilt distribution you can download **&mdash; or &mdash;** view the [live example](http://red5pro.github.io/red5pro-html5-hls/) and use one of our example publishing apps ([iOS](https://github.com/red5pro/red5pro-ios-app) or [Android](https://github.com/red5pro/red5pro-android-app)).
+
+### Building a Distribution
+
+Should you ever find the need to build a distribution yourself, you can run the following to accomplish that:
+
+```sh
+npm run dist
+```
 
 ## Overview of the HTML5 Client
 
