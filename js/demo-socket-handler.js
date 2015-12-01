@@ -13,13 +13,17 @@ class DemoSocketHandler extends SocketHandler {
     this.formHandler.addEventListener('inputchange', this.onInputChange.bind(this))
     this.formHandler.addEventListener('change', this.onChange.bind(this))
 
+    //  These are the basic websocket events
     this.addEventListener('open', this.onSocketOpen.bind(this))
     this.addEventListener('close', this.onSocketClose.bind(this))
     this.addEventListener('error', this.onSocketError.bind(this))
     this.addEventListener('message', this.onSocketMessage.bind(this))
+
+    //  This is a custom "message" event, separated out as it would be noisy otherwise
     this.addEventListener('ping', this.onSocketPing.bind(this))
   }
 
+  //  As the form is being typed in, update our preview URL
   onInputChange (obj) {
     const url = obj.url.replace(/\/$/, '')
     const socketURL = url.replace(/^https?:\/\//i, '')
@@ -27,6 +31,7 @@ class DemoSocketHandler extends SocketHandler {
     this.preview.innerHTML = `ws://${socketURL}:${obj.websocketPort}/metadata/${obj.context}/${obj.stream}`
   }
 
+  //  When the form has been submitted, close (if necessary) and reconnect our websocket
   onChange (obj) {
     const url = obj.url.replace(/\/$/, '').replace(/^(?!http(?:s)?:\/\/)(.)/i, 'http://$1')
     const socketURL = url.replace(/^https?:\/\//i, '')
@@ -42,20 +47,25 @@ class DemoSocketHandler extends SocketHandler {
     this.connect()
   }
 
+  //  Handle the websocket opening
   onSocketOpen (obj) {
     console.log('Socket opened')
   }
 
+  //  Handle the websocket closing
   onSocketClose (obj) {
     console.log('Socket closed')
   }
 
+  //  Handle the websocket erroring
   onSocketError (obj) {
     console.log(`Socket errored: ${JSON.stringify(obj)}`)
   }
 
+  //  Handle the websocket messages
   onSocketMessage (obj) {
     console.log(`Socket message: ${obj.name} - ${JSON.stringify(obj.data) || obj.data}`)
+
     if (obj.name === 'onMetaData') {
       this.videoHandler.rotation = obj.data.orientation || 0
       this.videoHandler.vWidth = obj.data['v-width'] || this.videoHandler.holder.getBoundingClientRect().width
@@ -63,6 +73,7 @@ class DemoSocketHandler extends SocketHandler {
     }
   }
 
+  //  Handle the websocket "ping" messages
   onSocketPing (obj) {
     console.log(`Ping! ${new Date(obj.timestamp)}`)
   }

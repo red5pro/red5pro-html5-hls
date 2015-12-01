@@ -20,17 +20,20 @@ class DemoVideoHandler extends VideoHandler {
     this.onRAF(0)
   }
 
+  //  As the form is being typed in, update our preview URL
   onInputChange (obj) {
     const url = obj.url.replace(/\/$/, '')
 
     this.preview.innerHTML = `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
   }
 
+  //  When the form has been submitted, update our video's size and rotation
   onChange (obj) {
     this.onOptionsUpdate(this.preview.innerHTML)
       .then(() => this.onRAF())
   }
 
+  //  Update video size and rotation every frame, as necessary
   onRAF (dt) {
     this.updateVideoSize()
     this.rotate()
@@ -40,61 +43,64 @@ class DemoVideoHandler extends VideoHandler {
     }
   }
 
-  get sizeIsDirty () {
-    const isPortrait = Math.abs(this.rotation) === 90
-    const vid = document.getElementById(this.videoID)
-    const vidRect = vid.getBoundingClientRect()
-    const holderRect = this.holder.getBoundingClientRect()
-
-    if (isPortrait) return vidRect.height !== holderRect.width
-
-    return vidRect.width !== holderRect.width
-  }
-
-  get rotationIsDirty () {
-    if (!this.videojs) return false
-
-    const styles = [
+  get transformStyles () {
+    //  A prefixed list of Javascript formatted transform style properties
+    return [
       'webkitTransform',
       'mozTransform',
       'msTransform',
       'oTransform',
       'transform'
     ]
-    const vid = this.videojs.el().querySelector('video')
-    const vidStyles = styles.map(x => vid.style[x] || null)
-    const notNullVidStyles = vidStyles.filter(x => x !== null)
-    const style = notNullVidStyles.pop()
+  }
 
-    return style !== `rotate(${this.rotation}deg)`
+  //  The size is "dirty" if the corresponding values (video width & holder width for landscape, video height & holder width for portrait) don't match
+  get sizeIsDirty () {
+    const isPortrait = Math.abs(this.rotation) === 90
+    const vid = document.getElementById(this.videoID)
+    const vidRect = vid.getBoundingClientRect()
+    const holderRect = this.holder.getBoundingClientRect()
+
+    return (isPortrait ? vidRect.height : vidRect.width) !== holderRect.width
+  }
+
+  //  The rotation is "dirty" if the applied rotation styling does not match the current rotation
+  get rotationIsDirty () {
+    if (!this.videojs) return false
+
+    const vid = this.videojs.el().querySelector('video')
+    const vidStyles = this.transformStyles.map(x => vid.style[x] || null)
+    const notNullVidStyles = vidStyles.filter(x => x !== null)
+    const style = '' + notNullVidStyles.pop()
+    const currentRotation = +(style.replace(/rotate\D+(\d+)/i, '$1'))
+
+    return currentRotation !== this.rotation
+  }
+
+  updateVideoAndContainerStyling (container, vid, width) {
+    const isPortrait = Math.abs(this.rotation) === 90
+    //  Determine the aspect ratio, falling back to 16:9
+    const aspectRatio = (this.vWidth || 16.0) / (this.vHeight || 9.0)
+    const height = Math.round(width / aspectRatio)
+    const offset = isPortrait ? (width - height) / 2.0 : 0
+
+    container.style.width = `${isPortrait ? height : width}px`
+    container.style.height = `${isPortrait ? width : height}px`
+    vid.style.width = `${width}px`
+    vid.style.height = `${height}px`
+    vid.style.top = `${offset}px`
+    vid.style.left = `-${offset}px`
   }
 
   updateVideoSize () {
     if (this.sizeIsDirty) {
       const container = document.getElementById(this.videoID)
       const vid = container.querySelector('video')
-      const isPortrait = Math.abs(this.rotation) === 90
       const width = this.holder.getBoundingClientRect().width
-      const aspectRatio = (this.vWidth || 16.0) / (this.vHeight || 9.0)
-      const height = Math.round(width / aspectRatio)
 
-      if (isPortrait) {
-        const halfSizeDifference = (width - height) / 2.0
-        container.style.width = `${height}px`
-        container.style.height = `${width}px`
-        vid.style.width = `${width}px`
-        vid.style.height = `${height}px`
-        vid.style.top = `${halfSizeDifference}px`
-        vid.style.left = `-${halfSizeDifference}px`
-      } else {
-        container.style.width = `${width}px`
-        container.style.height = `${height}px`
-        vid.style.width = `${width}px`
-        vid.style.height = `${height}px`
-        vid.style.top = '0px'
-        vid.style.left = '0px'
-      }
+      this.updateVideoAndContainerStyling(container, vid, width)
 
+      //  Remove "embed-responsive" and "embed-responsive-16by9" classes applied to the fallback video
       const containerParent = container.parentNode
       const clzzes = containerParent.className
       containerParent.className = clzzes.replace(/embed-responsive(?:-16by9)?/g, '').trim()
@@ -102,24 +108,15 @@ class DemoVideoHandler extends VideoHandler {
   }
 
   rotate () {
-    if (!this.videojs) return
-
     if (this.rotationIsDirty) {
       const vid = this.videojs.el().querySelector('video')
-      const rot = `rotate(${this.rotation}deg)`
 
+      //  Hide any overflow on our parent (the video.js main <div>)
       vid.parentNode.style.overflow = 'hidden'
 
-      const styles = [
-        'webkitTransform',
-        'mozTransform',
-        'msTransform',
-        'oTransform',
-        'transform'
-      ]
-
-      styles.forEach(x => {
-        if (vid.style[x] !== undefined) vid.style[x] = rot
+      //  Apply the transform styling to any applicable properties
+      this.transformStyles.forEach(x => {
+        if (vid.style[x] !== undefined) vid.style[x] = `rotate(${this.rotation}deg)`
       })
     }
   }
