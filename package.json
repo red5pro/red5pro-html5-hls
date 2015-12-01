@@ -1,6 +1,6 @@
 {
   "name": "red5pro-html5-hls",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Red5 Pro HTML5 HLS example",
   "main": "index.js",
   "scripts": {
