@@ -3,6 +3,8 @@
 import CustomEventTarget from './custom-event-target.js'
 import FormField from './form-field.js'
 
+//  Notifies listeners of input field and overall form changes
+//  Updates the submit button to draw attention to it
 class FormHandler extends CustomEventTarget {
   constructor (form, submit) {
     super()
@@ -25,6 +27,7 @@ class FormHandler extends CustomEventTarget {
     })
   }
 
+  //  Strip all Bootstrap button states and apply the specified state
   setButtonState (state, msg) {
     let clzz = this.submit.className
       .replace(/btn-(?:default|primary|success|info|warning|danger|link)/g, '')
@@ -41,34 +44,41 @@ class FormHandler extends CustomEventTarget {
     return this.hasSaved ? 'Update' : 'Save'
   }
 
+  //  Get a field with a specific ID
   fieldForPartialID (partialID) {
-    let matching = this.fields.filter(x => x.id === 'stream-settings-' + partialID)
+    const matching = this.fields.filter(x => x.id === 'stream-settings-' + partialID)
 
     if (matching.length) return matching[0]
     return null
   }
 
-  valueForPartialIDWithDefault (partialID, deflt) {
-    let field = this.fieldForPartialID(partialID)
+  //  Return either the field's value or it's placeholder if no value is present
+  valueForPartialID (partialID) {
+    const field = this.fieldForPartialID(partialID)
+    const deflt = field.placeholder
 
     if (field && field.value) return field.value
     return deflt
   }
 
+  //  Build an object for dispatched events with properties (or default fallbacks, should no value be present)
   get changeObject () {
+    const val = this.valueForPartialID.bind(this)
     return {
-      url: this.valueForPartialIDWithDefault('url-or-ip', 'http://example.com/'),
-      port: this.valueForPartialIDWithDefault('port', '5080'),
-      websocketPort: this.valueForPartialIDWithDefault('websocket-port', '6262'),
-      context: this.valueForPartialIDWithDefault('context', 'live'),
-      stream: this.valueForPartialIDWithDefault('stream', 'stream')
+      url: val('url-or-ip'),
+      port: val('port'),
+      websocketPort: val('websocket-port'),
+      context: val('context'),
+      stream: val('stream')
     }
   }
 
+  //  When input fields are focused, draw attention to the submit button
   onFieldFocus (e) {
     this.setButtonState('primary')
   }
 
+  //  When input fields are blurred, remove or keep attention on submit button depending on whether or not fields have changed
   onFieldBlur (e) {
     let hasChanged = this.fields.reduce((p, c) => p || c.value !== c.originalValue, false)
 
@@ -77,17 +87,20 @@ class FormHandler extends CustomEventTarget {
     }
   }
 
+  //  When input fields are typed in, draw attention to the submit button and dispatch an event notifying anyone listening
   onFieldChange (e) {
     this.setButtonState('primary')
 
     this.dispatchEvent('inputchange', this.changeObject)
   }
 
+  //  When the form is submitted, remove attention from the submit button and dispatch an event notifying anyone listening
+  //  Stop the form from following through with it's submission
   onSubmit (e) {
     this.hasSaved = true
     this.fields.forEach(x => x.update())
 
-    this.setButtonState('default', 'Update')
+    this.setButtonState('default', this.buttonMessage)
 
     this.dispatchEvent('change', this.changeObject)
 

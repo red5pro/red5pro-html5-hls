@@ -1,5 +1,6 @@
 'use strict'
 
+//  A small, simplistic event dispatcher & listener
 class CustomEventTarget {
   constructor () {
     this.callbacks = {}
