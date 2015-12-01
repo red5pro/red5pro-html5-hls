@@ -46,7 +46,7 @@ Make sure to set these up before you proceed! :+1:
 
 ### With a Prebuilt Distribution
 
-Visit our [releases](./releases) to find a prebuilt distribution you can download **&mdash; or &mdash;** view the [live example](http://red5pro.github.io/red5pro-html5-hls/) and use one of our example publishing apps ([iOS](https://github.com/red5pro/red5pro-ios-app) or [Android](https://github.com/red5pro/red5pro-android-app)).
+Visit our [releases](https://github.com/red5pro/red5pro-html5-hls/releases) to find a prebuilt distribution you can download **&mdash; or &mdash;** view the [live example](http://red5pro.github.io/red5pro-html5-hls/) and use one of our example publishing apps ([iOS](https://github.com/red5pro/red5pro-ios-app) or [Android](https://github.com/red5pro/red5pro-android-app)).
 
 ### Building a Distribution
 
