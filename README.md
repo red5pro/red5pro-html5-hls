@@ -21,6 +21,8 @@ An example of how to build an HTML client for [Red5 Pro's](http://red5pro.com/) 
 * [videojs-contrib-hls](https://github.com/videojs/videojs-contrib-hls)
 * [bootstrap](https://github.com/twbs/bootstrap) and it's dependencies
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 ## Requirements
 
 This example requires that you have the following in order to use it:
