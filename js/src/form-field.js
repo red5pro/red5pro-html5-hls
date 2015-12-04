@@ -6,12 +6,27 @@ class FormField {
     this.field = field
     this.name = field.name
     this.id = field.id
-    this.originalValue = field.value
+    this.originalValue = this.value
     this.placeholder = field.getAttribute('placeholder')
   }
 
+  get isCheckboxOrRadio () {
+    return /(?:checkbox|radio)/i.test(this.field.type)
+  }
+
   get value () {
-    return this.field.value
+    return this.isCheckboxOrRadio ? this.field.checked : this.field.value
+  }
+
+  setValue (val) {
+    if (this.isCheckboxOrRadio) {
+      this.field.checked = val
+    } else {
+      this.field.value = val
+    }
+    this.originalValue = val
+
+    return this
   }
 
   update () {

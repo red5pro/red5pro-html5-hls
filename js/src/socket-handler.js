@@ -12,32 +12,39 @@ class SocketHandler extends CustomEventTarget {
     this.context = ''
     this.stream = ''
     this.socket = null
+    this.socketID = -1
   }
 
   onopen (e) {
-    this.dispatchEvent('open', {evt: e})
+    this.socketID = Date.now()
+    this.dispatchEvent('open', {evt: e, id: this.socketID})
   }
 
   onclose (e) {
-    this.dispatchEvent('close', {evt: e})
     this.socket = null
+    this.dispatchEvent('close', {evt: e, id: this.socketID})
+    this.socketID = -1
   }
 
   onmessage (e) {
     let d = JSON.parse(e.data || {})
 
     if (d.name) {
-      this.dispatchEvent('message', {evt: e, name: d.name, data: d.data})
+      this.dispatchEvent('message', {evt: e, id: this.socketID, name: d.name, data: d.data})
     } else if (d.ping) {
-      this.dispatchEvent('ping', {evt: e, timestamp: d.ping})
+      this.dispatchEvent('ping', {evt: e, id: this.socketID, timestamp: d.ping})
     }
   }
 
   onerror (e) {
-    this.dispatchEvent('error', {evt: e})
+    this.dispatchEvent('error', {evt: e, id: this.socketID})
   }
 
   connect () {
+    if (this.socket) {
+      this.close()
+    }
+
     this.socket = new WebSocket(`${this.url}${this.context}${this.stream}`)
 
     this.socket.onopen = this.onopen.bind(this)
