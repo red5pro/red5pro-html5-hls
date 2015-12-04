@@ -8,58 +8,116 @@ class VideoHandler {
     this.holder = holder
     this.videojs = null
     this.hlsSource = null
+
+    this.hasAssignedEventListeners = false
   }
 
+  //  Assign all video.js listeners (those which are listed on http://docs.videojs.com/docs/api/player.html#events)
+  addVideoJSEventListeners () {
+    if (this.hasAssignedEventListeners) return
+
+    this.videojs.on('error', this.onVideoJSError.bind(this))
+    this.videojs.on('loadeddata', this.onVideoJSLoadedData.bind(this))
+    this.videojs.on('loadedmetadata', this.onVideoJSLoadedMetadata.bind(this))
+    this.videojs.on('timeupdate', this.onVideoJSTimeUpdate.bind(this))
+    this.videojs.on('useractive', this.onVideoJSUserActive.bind(this))
+    this.videojs.on('userinactive', this.onVideoJSUserInactive.bind(this))
+    this.videojs.on('volumechange', this.onVideoJSVolumeChange.bind(this))
+    this.hasAssignedEventListeners = true
+  }
+
+  //  Remove all video.js listeners (those which are listed on http://docs.videojs.com/docs/api/player.html#events)
+  removeVideoJSEventListeners () {
+    if (!this.hasAssignedEventListeners) return
+
+    this.videojs.off('error', this.onVideoJSError.bind(this))
+    this.videojs.off('loadeddata', this.onVideoJSLoadedData.bind(this))
+    this.videojs.off('loadedmetadata', this.onVideoJSLoadedMetadata.bind(this))
+    this.videojs.off('timeupdate', this.onVideoJSTimeUpdate.bind(this))
+    this.videojs.off('useractive', this.onVideoJSUserActive.bind(this))
+    this.videojs.off('userinactive', this.onVideoJSUserInactive.bind(this))
+    this.videojs.off('volumechange', this.onVideoJSVolumeChange.bind(this))
+    this.hasAssignedEventListeners = false
+  }
+
+  //  Cleanup our HLS <source> if it exists
+  cleanupHLS () {
+    if (this.hlsSource) {
+      this.hlsSource.remove()
+    }
+
+    this.hlsSource = null
+  }
+
+  //  Cleanup our video.js implementation
+  cleanupVideoJS () {
+    if (this.videojs) {
+      this.video.remove()
+      this.removeVideoJSEventListeners()
+      this.videojs.dispose()
+      //  This recreates our original <video> element and appends it to the original containing element
+      this.video = this.clone.cloneNode(true)
+      this.holder.appendChild(this.video)
+    }
+
+    this.videojs = null
+  }
+
+  //  Add a new <source> for our <video> and startup video.js
   addSource (src, type) {
     let self = this
     return new Promise((resolve, reject) => {
       //  If we have a current <source> element, remove it
-      if (self.hlsSource) {
-        self.hlsSource.remove()
-        self.hlsSource = null
-      }
+      self.cleanupHLS()
 
       //  If video.js has already been instantiated, dispose of it
-      if (self.videojs) {
-        self.video.remove()
-        self.videojs.dispose()
-        self.videojs = null
-        //  This recreates our original <video> element and appends it to the original containing element
-        self.video = self.clone.cloneNode(true)
-        self.holder.appendChild(self.video)
+      self.cleanupVideoJS()
+
+      function createSource (_src, _type) {
+        let sourceEl = document.createElement('source')
+        sourceEl.src = _src
+        sourceEl.type = _type
+        return sourceEl
       }
 
-      let fallback = document.getElementById('fallback-source')
+      function insertSourceInto (_src, _type, _parent) {
+        let sourceEl = createSource(_src, _type)
+        if (_parent.firstChild) {
+          _parent.insertBefore(sourceEl, _parent.firstChild)
+        } else {
+          _parent.appendChild(sourceEl)
+        }
+        return sourceEl
+      }
 
       //  Create the new <source> element
-      self.hlsSource = document.createElement('source')
-      self.hlsSource.src = src
-      self.hlsSource.type = type
-      self.hlsSource.crossOrigin = 'anonymous'
-      fallback.parentNode.insertBefore(self.hlsSource, fallback)
+      self.hlsSource = insertSourceInto(src, type, self.video)
 
       //  Instantiate video.js
-      self.videojs = videojs(self.video, {}, function () {
-        resolve()
+      const opts = {
+        techOrder: ['html5', 'flash']
+      }
+
+      self.videojs = videojs(self.video, opts, function (...args) {
+        self.addVideoJSEventListeners()
+        resolve(...args)
       })
     })
   }
 
-  //  Adds a <source> according to the URL passed
-  onOptionsUpdate (url) {
-    return this.addSource(url, VideoHandler.HLSType())
-  }
+  onVideoJSError (e) {}
 
-  //  Get the video source type appropriate to the browser
-  static HLSType () {
-    let appVersion = navigator.appVersion
-    let isChrome = /chrome/i.test(appVersion)
-    let isSafari = /safari/i.test(appVersion)
+  onVideoJSLoadedData () {}
 
-    if (isChrome) return 'application/x-mpegURL'
-    else if (isSafari) return 'application/vnd.apple.mpegURL'
-    return 'application/x-mpegURL'
-  }
+  onVideoJSLoadedMetadata () {}
+
+  onVideoJSTimeUpdate () {}
+
+  onVideoJSUserActive () {}
+
+  onVideoJSUserInactive () {}
+
+  onVideoJSVolumeChange () {}
 }
 
 export default VideoHandler

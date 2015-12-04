@@ -49,33 +49,31 @@ class DemoSocketHandler extends SocketHandler {
 
   //  Handle the websocket opening
   onSocketOpen (obj) {
-    console.log('Socket opened')
+    console.log(`Socket ${obj.id} opened`)
   }
 
   //  Handle the websocket closing
   onSocketClose (obj) {
-    console.log('Socket closed')
+    console.log(`Socket ${obj.id} closed`)
   }
 
   //  Handle the websocket erroring
   onSocketError (obj) {
-    console.log(`Socket errored: ${JSON.stringify(obj)}`)
+    console.log(`Socket (${obj.id}) errored: ${JSON.stringify(obj)}`)
   }
 
   //  Handle the websocket messages
   onSocketMessage (obj) {
-    console.log(`Socket message: ${obj.name} - ${JSON.stringify(obj.data) || obj.data}`)
+    console.log(`Socket (${obj.id}) message: ${obj.name} - ${JSON.stringify(obj.data) || obj.data}`)
 
     if (obj.name === 'onMetaData') {
-      this.videoHandler.rotation = obj.data.orientation || 0
-      this.videoHandler.vWidth = obj.data['v-width'] || this.videoHandler.holder.getBoundingClientRect().width
-      this.videoHandler.vHeight = obj.data['v-height'] || this.videoHandler.holder.getBoundingClientRect().height
+      this.videoHandler.handleMetadataUpdate(obj.data)
     }
   }
 
   //  Handle the websocket "ping" messages
   onSocketPing (obj) {
-    console.log(`Ping! ${new Date(obj.timestamp)}`)
+    console.log(`Ping! ${new Date(obj.timestamp)} from socket ${obj.id}`)
   }
 }
 

@@ -5,7 +5,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
-  <link href="videojs/video-js.min.css" rel="stylesheet">
+  <link href="lib/videojs/video-js.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -18,37 +18,44 @@
       <div class="panel-body">
         <form accept-charset="utf-8" id="stream-settings-form" class="form-horizontal">
           <div class="form-group">
-            <label for="stream-settings-url-or-ip" class="control-label col-sm-3">Stream URL or IP</label>
+            <label for="stream-settings-url-or-ip" id="stream-settings-url-or-ip-label" class="control-label col-sm-3">Stream URL or IP</label>
             <div class="input-group col-sm-9">
               <input type="text" name="stream-settings-url-or-ip" id="stream-settings-url-or-ip" value="" placeholder="http://example.com" class="form-control">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="stream-settings-port" class="control-label col-sm-3">Stream Port</label>
+            <label for="stream-settings-port" id="stream-settings-port-label" class="control-label col-sm-3">Stream Port</label>
             <div class="input-group col-sm-9">
               <input type="number" name="stream-settings-port" id="stream-settings-port" value="" placeholder="5080" class="form-control">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="stream-settings-websocket-port" class="control-label col-sm-3">Stream Websocket Port</label>
+            <label for="stream-settings-websocket-port" id="stream-settings-websocket-port-label" class="control-label col-sm-3">Stream Websocket Port</label>
             <div class="input-group col-sm-9">
               <input type="number" name="stream-settings-websocket-port" id="stream-settings-websocket-port" value="" placeholder="6262" class="form-control">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="stream-settings-context" class="control-label col-sm-3">Stream Context</label>
+            <label for="stream-settings-context" id="stream-settings-context-label" class="control-label col-sm-3">Stream Context</label>
             <div class="input-group col-sm-9">
               <input type="text" name="stream-settings-context" id="stream-settings-context" value="" placeholder="live" class="form-control">
             </div>
           </div>
 
           <div class="form-group form-group">
-            <label for="stream-settings-stream" class="control-label col-sm-3">Stream Name</label>
+            <label for="stream-settings-stream" id="stream-settings-stream-label" class="control-label col-sm-3">Stream Name</label>
             <div class="input-group col-sm-9">
               <input type="text" name="stream-settings-stream" id="stream-settings-stream" value="" placeholder="stream" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="stream-settings-cluster" id="stream-settings-cluster-label" class="control-label col-sm-3">Subscribe via Red5 Pro Cluster?</label>
+            <div class="input-group col-sm-9">
+              <input type="checkbox" name="stream-settings-cluster" id="stream-settings-cluster" value="1" class="form-control">
             </div>
           </div>
 
@@ -57,14 +64,14 @@
           </div>
 
           <div class="form-group">
-            <label for="stream-url-preview" class="control-label col-sm-3">Stream URL Preview</label>
+            <label for="stream-url-preview" id="stream-url-preview-label" class="control-label col-sm-3">Stream URL Preview</label>
             <div class="input-group col-sm-9">
               <p class="form-control-static" id="stream-url-preview"></p>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="stream-websocket-url-preview" class="control-label col-sm-3">Stream WebSocket URL Preview</label>
+            <label for="stream-websocket-url-preview" id="stream-websocket-url-preview-label" class="control-label col-sm-3">Stream WebSocket URL Preview</label>
             <div class="input-group col-sm-9">
               <p class="form-control-static" id="stream-websocket-url-preview"></p>
             </div>
@@ -75,19 +82,53 @@
 
     <div class="row">
       <div class="embed-responsive embed-responsive-16by9">
-        <video autobuffer controls preload="auto" class="video-js vjs-default-skin" id="demo-vid">
-          <source src="media/demo.mp4" type="video/mp4" id="fallback-source">
+        <video controls webkit-playsinline class="video-js vjs-default-skin" id="demo-vid">
+          <!-- <source src="media/demo.mp4" type="video/mp4"> -->
           <p class="vjs-no-js">We're sorry, but your browser doesn't support HLS</p>
         </video>
       </div>
     </div>
   </div>
 
+  <script>
+    // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+    // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+    // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+
+    // MIT license
+
+    (function() {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                       || window[vendors[x]+'CancelRequestAnimationFrame'];
+        }
+     
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = function(callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+                  timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+     
+        if (!window.cancelAnimationFrame)
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+    }());
+  </script>
+
   <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-  <script src="videojs/video.min.js"></script>
-  <script src="js/videojs-media-sources.min.js"></script>
-  <script src="js/videojs.hls.min.js"></script>
-  <script src="js/bundle.js"></script>
+  <script src="lib/videojs/video.min.js"></script>
+  <script src="lib/videojs/videojs-media-sources.min.js"></script>
+  <script src="lib/videojs/videojs.hls.min.js"></script>
+  <script src="bundled/bundle.js"></script>
 </body>
 </html>
