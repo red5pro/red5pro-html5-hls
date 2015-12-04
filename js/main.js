@@ -1,6 +1,6 @@
 require('babel-polyfill')
 
-import FormHandler from './src/form-handler.js'
+import DemoFormHandler from './demo-form-handler.js'
 import DemoVideoHandler from './demo-video-handler.js'
 import DemoSocketHandler from './demo-socket-handler.js'
 
@@ -9,7 +9,7 @@ import DemoSocketHandler from './demo-socket-handler.js'
 
   function onDomContentLoaded (e) {
     const x = document.getElementById.bind(document)
-    const formHandler = new FormHandler(x('stream-settings-form'), x('stream-settings-form-submit'))
+    const formHandler = new DemoFormHandler(x('stream-settings-form'), x('stream-settings-form-submit'))
     const videoHandler = new DemoVideoHandler(formHandler)
     const socketHandler = new DemoSocketHandler(formHandler, videoHandler) // eslint-disable-line no-unused-vars
   }

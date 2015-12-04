@@ -15,6 +15,7 @@ class FormHandler extends CustomEventTarget {
     this.fields = Array.prototype.slice.call(inputs).map(x => new FormField(x))
     this.form = form
     this.hasSaved = false
+    this.hadDangerClass = false
     this.submit = submit
 
     this.form.addEventListener('submit', this.onSubmit.bind(this))
@@ -29,19 +30,28 @@ class FormHandler extends CustomEventTarget {
 
   //  Strip all Bootstrap button states and apply the specified state
   setButtonState (state, msg) {
-    let clzz = this.submit.className
+    const _msg = msg == null ? this.buttonMessage : msg
+    const clzz = this.submit.className
       .replace(/btn-(?:default|primary|success|info|warning|danger|link)/g, '')
       .replace(/\s+/g, ' ')
       .trim()
 
     this.submit.className = `${clzz} btn-${state}`
-    this.submit.innerHTML = msg || this.buttonMessage
+    this.submit.innerHTML = state === 'danger' ? `Error! ${_msg}` : _msg
 
     return this
   }
 
+  get hasDangerClass () {
+    return /btn-danger/i.test(this.submit.className)
+  }
+
   get buttonMessage () {
     return this.hasSaved ? 'Update' : 'Save'
+  }
+
+  getDangerOrClass (clzz) {
+    return this.hasDangerClass ? 'danger' : clzz
   }
 
   //  Get a field with a specific ID
@@ -69,27 +79,28 @@ class FormHandler extends CustomEventTarget {
       port: val('port'),
       websocketPort: val('websocket-port'),
       context: val('context'),
-      stream: val('stream')
+      stream: val('stream'),
+      isCluster: this.fieldForPartialID('cluster').field.checked
     }
   }
 
   //  When input fields are focused, draw attention to the submit button
   onFieldFocus (e) {
-    this.setButtonState('primary')
+    this.setButtonState(this.getDangerOrClass('primary'))
   }
 
   //  When input fields are blurred, remove or keep attention on submit button depending on whether or not fields have changed
   onFieldBlur (e) {
-    let hasChanged = this.fields.reduce((p, c) => p || c.value !== c.originalValue, false)
+    const hasChanged = this.fields.reduce((p, c) => p || c.value !== c.originalValue, false)
 
     if (!hasChanged) {
-      this.setButtonState('default')
+      this.setButtonState(this.getDangerOrClass('default'))
     }
   }
 
   //  When input fields are typed in, draw attention to the submit button and dispatch an event notifying anyone listening
   onFieldChange (e) {
-    this.setButtonState('primary')
+    this.setButtonState(this.getDangerOrClass('primary'))
 
     this.dispatchEvent('inputchange', this.changeObject)
   }
@@ -98,6 +109,10 @@ class FormHandler extends CustomEventTarget {
   //  Stop the form from following through with it's submission
   onSubmit (e) {
     this.hasSaved = true
+
+    //  Validation
+    this.validate()
+
     this.fields.forEach(x => x.update())
 
     this.setButtonState('default', this.buttonMessage)
@@ -106,6 +121,21 @@ class FormHandler extends CustomEventTarget {
 
     e.preventDefault()
     e.stopPropagation()
+  }
+
+  validate () {
+    const urlField = this.fieldForPartialID('url-or-ip')
+    const protocol = window.location.protocol.replace(/:$/, '')
+    const lackingProtocolRegEx = /^(?!http(?:s)?:\/\/)(.*)$/i
+    const indeterminateProtocolRegEx = /^\/\/(.*)$/
+    let urlVal = urlField.value
+
+    if (urlVal) {
+      urlVal = urlVal.replace(indeterminateProtocolRegEx, `${protocol}://$1`)
+      urlVal = urlVal.replace(lackingProtocolRegEx, `${protocol}://$1`)
+
+      urlField.setValue(urlVal)
+    }
   }
 }
 
