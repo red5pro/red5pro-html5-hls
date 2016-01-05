@@ -85,3 +85,4 @@ By modifying these "moving" pieces, you can reshape the behavior of the Red5 Pro
 
 [r5p]:      https://red5pro.com                                 "Red5 Pro"
 [r5s]:      https://www.red5pro.com/docs/streaming/overview/    "Red5 Pro Streaming SDK"
+[![Analytics](https://ga-beacon.appspot.com/UA-59819838-3/red5pro/red5pro-html5-hls?pixel)](https://github.com/igrigorik/ga-beacon)
