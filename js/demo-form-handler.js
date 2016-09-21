@@ -52,6 +52,7 @@ class DemoFormHandler extends FormHandler {
             //     {"name":"myStream.m3u8","lastModified":1473438521000,"length":213,"url":"streams/hls/myStream/myStream.m3u8"},
             //     {"name":"stream12345.m3u8","lastModified":1474309296000,"length":136,"url":"streams/hls/stream12345/stream12345.m3u8"}
             // ]}
+            // a playlist url originating from S3 will be a full url ex. https://s3.amazonaws.com/stream123/stream123.m3u8 
             
             // here we need to create 'option' elements and add them to the 'select' dropdown
             // <option name="${json.playlist[x].name}">${json.playlist[x].url}</option>
