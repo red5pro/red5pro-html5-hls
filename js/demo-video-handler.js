@@ -120,13 +120,13 @@ class DemoVideoHandler extends VideoHandler {
     if (!obj.isCluster) {
       return `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
     } else {
-      return `${url}:5080/cluster`
+      return `${url}:${obj.port}/cluster`
     }
   }
 
   //  As the form is being typed in, update our preview URL
   onInputChange (obj) {
-    this.preview.innerHTML = this.cleanURL(obj)
+    this.preview.innerHTML = obj.isVOD ? obj.stream : this.cleanURL(obj)
   }
 
   //  When the form has been submitted, update our video's size and rotation
@@ -160,6 +160,10 @@ class DemoVideoHandler extends VideoHandler {
       2.  Update the video and it's container's styling
         i.  Catch any other errors that may happen
       */
+      if (obj.isVOD) {
+        url = obj.stream
+      }
+
       this.subscribeToStream(url)
         .catch((x) => {
           this.formHandler.setButtonState('danger')
@@ -174,7 +178,7 @@ class DemoVideoHandler extends VideoHandler {
   retrieveStreamIP (obj) {
     const self = this
     const url = obj.url.replace(/\/$/, '')
-    const clusterURL = `${url}:5080/cluster`
+    const clusterURL = `${url}:${obj.port}/cluster`
     
     return new Promise((resolve, reject) => {
       let req = new XMLHttpRequest()

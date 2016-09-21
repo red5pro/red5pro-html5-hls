@@ -28,7 +28,7 @@ class DemoSocketHandler extends SocketHandler {
     const url = obj.url.replace(/\/$/, '')
     const socketURL = url.replace(/^https?:\/\//i, '')
 
-    this.preview.innerHTML = `ws://${socketURL}:${obj.websocketPort}/metadata/${obj.context}/${obj.stream}`
+    this.preview.innerHTML = obj.isVOD ? `ws://${(obj.stream || '').replace(/^https?:\/\//i, '')}` : `ws://${socketURL}:${obj.websocketPort}/metadata/${obj.context}/${obj.stream}`
   }
 
   //  When the form has been submitted, close (if necessary) and reconnect our websocket

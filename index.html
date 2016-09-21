@@ -45,10 +45,18 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="stream-settings-stream-group">
             <label for="stream-settings-stream" id="stream-settings-stream-label" class="control-label col-sm-3">Stream Name</label>
             <div class="input-group col-sm-9">
               <input type="text" name="stream-settings-stream" id="stream-settings-stream" value="" placeholder="stream" class="form-control">
+            </div>
+          </div>
+
+          <!-- Dropdown with available vod files -->
+          <div class="form-group" id="stream-settings-vod-group" class="hidden">
+            <label for="stream-settings-vod-stream" id="stream-settings-vod-stream-label" class="control-label col-sm-3">VOD List</label>
+            <div class="input-group col-sm-9">
+              <select name="stream-settings-vod-stream" id="stream-settings-vod-stream" class="form-control"></select>
             </div>
           </div>
 
@@ -56,6 +64,13 @@
             <label for="stream-settings-cluster" id="stream-settings-cluster-label" class="control-label col-sm-3">Subscribe via Red5 Pro Cluster?</label>
             <div class="input-group col-sm-9">
               <input type="checkbox" name="stream-settings-cluster" id="stream-settings-cluster" value="1" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="stream-settings-vod" id="stream-settings-vod-label" class="control-label col-sm-3">Subscribe to Red5 Pro VOD?</label>
+            <div class="input-group col-sm-9">
+              <input type="checkbox" name="stream-settings-vod" id="stream-settings-vod" value="1" class="form-control">
             </div>
           </div>
 
