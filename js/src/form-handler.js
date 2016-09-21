@@ -69,7 +69,6 @@ class FormHandler extends CustomEventTarget {
 
     if (field && field.value) return field.value
     if (field) return deflt
-    console.warn('No field for id stream-settings-' + partialID)
     return ''
   }
 
