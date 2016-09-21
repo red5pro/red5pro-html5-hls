@@ -52,16 +52,11 @@ class DemoFormHandler extends FormHandler {
             //     {"name":"myStream.m3u8","lastModified":1473438521000,"length":213,"url":"streams/hls/myStream/myStream.m3u8"},
             //     {"name":"stream12345.m3u8","lastModified":1474309296000,"length":136,"url":"streams/hls/stream12345/stream12345.m3u8"}
             // ]}
+            
+            // here we need to create 'option' elements and add them to the 'select' dropdown
+            // <option name="${json.playlist[x].name}">${json.playlist[x].url}</option>
 
-            //  We only need the IP range of that, so let's strip the rest
-            const streamIP = this.response.replace(/:\d+$/, '')
 
-            //  Format the stream URL
-            const protocol = window.location.protocol.replace(/:$/, '')
-            let streamObj = Object.create(obj)
-            streamObj.url = `${protocol}://${streamIP}`
-            streamObj.isCluster = false
-            resolve(self.cleanURL(streamObj))
           } else {
             reject(this.status, this.response)
           }
