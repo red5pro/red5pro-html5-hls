@@ -38,6 +38,54 @@ Make sure to set these up before you proceed! :+1:
 
 ## Getting Up and Running
 
+### For HLS VOD
+
+To provide HLS media content, your Red5 Pro server may require extra configuration.
+
+All Red5 Pro applications (those that reside in the `webapps` directory) which provide HLS content require support for [Cross-origin resource sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) or CORS. That means the following `servlet filter` has to be configured in the applications web application configuration file, its `web.xml`. The example below will work for serving HLS content.
+
+```xml
+    <filter>
+        <filter-name>CORS</filter-name>
+        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>cors.allowOrigin</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.allowSubdomains</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.supportedMethods</param-name>
+            <param-value>GET, HEAD</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.maxAge</param-name>
+            <param-value>3600</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORS</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+```
+
+To support listing of HLS VOD media files, the `M3U8ListingServlet` must be enabled in your applications `web.xml` file as shown below.
+
+```xml
+    <servlet>
+        <servlet-name>playlists</servlet-name>
+        <servlet-class>com.red5pro.stream.transform.mpegts.server.M3U8ListingServlet</servlet-class>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>playlists</servlet-name>
+        <url-pattern>/playlists/*</url-pattern>
+    </servlet-mapping>
+```
+
+
 ### For Local Development
 
 1. Clone the repo
