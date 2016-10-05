@@ -119,7 +119,7 @@ class DemoFormHandler extends FormHandler {
     }
   }
 
-  //  Gather the available vod file info via playlist servlet
+  //  Gather the available vod file info via playlists servlet
   retrieveStreamList (e) {
     const self = this
     const ip = this.ipInput.value || 'localhost'
@@ -127,7 +127,7 @@ class DemoFormHandler extends FormHandler {
     const context = this.contextInput.value || 'vod'
     const baseURL = `http://${ip}:${port}/${context}/`
     const protocol = window.location.protocol.replace(/:$/, '')
-    const playlistServletURL = `${protocol}://${ip}:${port}/${context}/playlists`
+    const playlistsServletURL = `${protocol}://${ip}:${port}/${context}/playlists`
     
     return new Promise((resolve, reject) => {
       let req = new XMLHttpRequest()
@@ -136,18 +136,18 @@ class DemoFormHandler extends FormHandler {
         if (this.readyState === 4) {
           if (this.status >= 200 && this.status < 400) {
             //  When XHR is done and we receive a good status code, we'll get something like the following back:
-            // {"playlist":[
+            // {"playlists":[
             //     {"name":"myStream.m3u8","lastModified":1473438521000,"length":213,"url":"streams/hls/myStream/myStream.m3u8"},
             //     {"name":"stream12345.m3u8","lastModified":1474309296000,"length":136,"url":"streams/hls/stream12345/stream12345.m3u8"}
             // ]}
-            // a playlist url originating from S3 will be a full url ex. https://s3.amazonaws.com/stream123/stream123.m3u8 
+            // a playlists url originating from S3 will be a full url ex. https://s3.amazonaws.com/stream123/stream123.m3u8 
             
             // here we need to create 'option' elements and add them to the 'select' dropdown
-            // <option name="${json.playlist[x].name}">${json.playlist[x].url}</option>
+            // <option name="${json.playlists[x].name}">${json.playlists[x].url}</option>
 
             const response = JSON.parse(this.response)
-            const playlist = response.playlist || []
-            const options = playlist.map(function (item) {
+            const playlists = response.playlists || []
+            const options = playlists.map(function (item) {
               const url = /^http/i.test(item.url) ? item.url : `${baseURL}${item.url}`
               return {
                 name: item.name,
@@ -194,7 +194,7 @@ class DemoFormHandler extends FormHandler {
 
       req.timeout = 15000
 
-      req.open('GET', playlistServletURL, true)
+      req.open('GET', playlistsServletURL, true)
       req.send()
     })
   }
