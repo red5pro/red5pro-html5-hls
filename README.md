@@ -106,7 +106,7 @@ Should you ever find the need to build a distribution yourself, you can run the 
 npm run dist
 ```
 
-## Overview of the HTML5 Client
+## Overview of the [HTML5 Client](http://red5pro.github.io/red5pro-html5-hls/)
 
 The example HTML5 client has 5 fields allowing you to connect to whatever [Red5 Pro][r5p] server and stream you'd like.
 
@@ -117,6 +117,15 @@ The example HTML5 client has 5 fields allowing you to connect to whatever [Red5 
 | Stream Websocket Port | This is the port for your websocket connection on the [Red5 Pro][r5p] server. By default, this is 6262 in the server.                                                                           |
 | Stream Context        | This is the context under which your stream is running on the [Red5 Pro][r5p] server. By default, this is "live" in the server and the example mobile apps.                                     |
 | Stream Name           | This is the name for your stream on the [Red5 Pro][r5p] server. You specify this in either the example mobile apps when you publish or in your own apps using the [Red5 Pro Streaming SDK][r5s] |
+
+**Subscribe via Red5 Pro Cluster?** - check the box if you are running on a cluster, so that the example looks for the edge servers in round robin
+
+**Subscribe to Red5 Pro VOD?** - check the box if you have recorded HLS files and want to play them on demand. 
+
+After you have entered data in the relevant fields, hit the **Save** button. This will display the stream in the preview window - hit the [> play button to start playing. Also, it will generate a
+*Stream URL Preview* and *Stream WebSocket URL Preview*.
+
+**Note:** HLS latency is between 10 and 20 seconds, so make sure you have been publishing for at least 15 seconds before trying to subscribe
 
 You can Save/Update the form and it will use the default values (shown as placeholders) for any fields you haven't filled in.
 
@@ -130,6 +139,9 @@ There are 4 "moving" pieces to the Red5 Pro HLS HTML5 client example, only 3 of 
 4. :heavy_multiplication_x: [js/src/form-handler.js](./js/src/form-handler.js) which notifies other pieces of changes ("inputchange" for live editing, "change" for Save/Update) to the example form
 
 By modifying these "moving" pieces, you can reshape the behavior of the Red5 Pro HLS HTML5 client example to suit your needs.
+
+
+
 
 [r5p]:      https://red5pro.com                                 "Red5 Pro"
 [r5s]:      https://www.red5pro.com/docs/streaming/overview/    "Red5 Pro Streaming SDK"
