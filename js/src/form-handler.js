@@ -10,7 +10,7 @@ class FormHandler extends CustomEventTarget {
     super()
 
     let self = this
-    let inputs = form.querySelectorAll('input, select')
+    let inputs = form.querySelectorAll('input')
 
     this.fields = Array.prototype.slice.call(inputs).map(x => new FormField(x))
     this.form = form
@@ -68,22 +68,19 @@ class FormHandler extends CustomEventTarget {
     const deflt = field.placeholder
 
     if (field && field.value) return field.value
-    if (field) return deflt
-    return ''
+    return deflt
   }
 
   //  Build an object for dispatched events with properties (or default fallbacks, should no value be present)
   get changeObject () {
     const val = this.valueForPartialID.bind(this)
-    const isVOD = this.fieldForPartialID('vod').field.checked
     return {
       url: val('url-or-ip'),
       port: val('port'),
       websocketPort: val('websocket-port'),
       context: val('context'),
-      stream: isVOD ? val('vod-stream') : val('stream'),
-      isCluster: this.fieldForPartialID('cluster').field.checked,
-      isVOD: isVOD
+      stream: val('stream'),
+      isCluster: this.fieldForPartialID('cluster').field.checked
     }
   }
 

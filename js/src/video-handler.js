@@ -52,15 +52,9 @@ class VideoHandler {
   //  Cleanup our video.js implementation
   cleanupVideoJS () {
     if (this.videojs) {
-      const id = this.clone.id
       this.video.remove()
       this.removeVideoJSEventListeners()
-      try {
-        this.videojs.dispose()
-      } catch (e) {
-        const el = document.querySelector(`#${id}`)
-        el.remove()
-      }
+      this.videojs.dispose()
       //  This recreates our original <video> element and appends it to the original containing element
       this.video = this.clone.cloneNode(true)
       this.holder.appendChild(this.video)
