@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dist": "npm run publish && node __scripts/build-dist.js",
-    "lint": "standard js/**/*.js --verbose",
+    "lint": "standard js/*.js --verbose && standard js/**/*.js --verbose",
     "publish": "npm run lint && browserify -d -e js/main.js -o bundled/bundle.js -t [ babelify --presets [ es2015 ] ]",
     "start": "npm run publish && PORT=3000 node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,3 +1,4 @@
+/* global XMLHttpRequest */
 'use strict'
 
 import VideoHandler from './src/video-handler.js'
@@ -179,7 +180,7 @@ class DemoVideoHandler extends VideoHandler {
     const self = this
     const url = obj.url.replace(/\/$/, '')
     const clusterURL = `${url}:${obj.port}/cluster`
-    
+
     return new Promise((resolve, reject) => {
       let req = new XMLHttpRequest()
 

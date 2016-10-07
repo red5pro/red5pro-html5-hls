@@ -1,3 +1,4 @@
+/* global Event XMLHttpRequest */
 'use strict'
 
 import FormHandler from './src/form-handler.js'
@@ -28,7 +29,7 @@ function removeClass (el, clz) {
       const clzzes = el.className
       const idx = clzzes.indexOf(clz)
       const removed = clzzes.substring(0, idx) + clzzes.substring(idx + clz.length)
-      const noSpaces = remove.replace(/\s+/g, ' ')
+      const noSpaces = removed.replace(/\s+/g, ' ')
 
       el.className = noSpaces
     }
@@ -128,7 +129,7 @@ class DemoFormHandler extends FormHandler {
     const baseURL = `http://${ip}:${port}/${context}/`
     const protocol = window.location.protocol.replace(/:$/, '')
     const playlistsServletURL = `${protocol}://${ip}:${port}/${context}/playlists`
-    
+
     return new Promise((resolve, reject) => {
       let req = new XMLHttpRequest()
 
@@ -140,8 +141,8 @@ class DemoFormHandler extends FormHandler {
             //     {"name":"myStream.m3u8","lastModified":1473438521000,"length":213,"url":"streams/hls/myStream/myStream.m3u8"},
             //     {"name":"stream12345.m3u8","lastModified":1474309296000,"length":136,"url":"streams/hls/stream12345/stream12345.m3u8"}
             // ]}
-            // a playlists url originating from S3 will be a full url ex. https://s3.amazonaws.com/stream123/stream123.m3u8 
-            
+            // a playlists url originating from S3 will be a full url ex. https://s3.amazonaws.com/stream123/stream123.m3u8
+
             // here we need to create 'option' elements and add them to the 'select' dropdown
             // <option name="${json.playlists[x].name}">${json.playlists[x].url}</option>
 
@@ -158,7 +159,7 @@ class DemoFormHandler extends FormHandler {
               self.vodSelect.remove(0)
             }
             const frag = document.createDocumentFragment()
-            const optionEls = options.forEach(function (item, idx) {
+            options.forEach(function (item, idx) {
               const option = document.createElement('option')
               if (idx === 0) {
                 option.defaultSelected = true
