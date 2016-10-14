@@ -3,6 +3,14 @@
 import CustomEventTarget from './custom-event-target.js'
 import FormField from './form-field.js'
 
+function hasClass (el, clz) {
+  if (el.classList) {
+    return el.classList.contains(clz)
+  } else {
+    return el.className.indexOf(clz) > -1
+  }
+}
+
 //  Notifies listeners of input field and overall form changes
 //  Updates the submit button to draw attention to it
 class FormHandler extends CustomEventTarget {
@@ -74,12 +82,19 @@ class FormHandler extends CustomEventTarget {
   //  Build an object for dispatched events with properties (or default fallbacks, should no value be present)
   get changeObject () {
     const val = this.valueForPartialID.bind(this)
+    const selectedVal = (partialID) => {
+      const field = this.fieldForPartialID(partialID)
+      const selected = field.item(field.selectedIndex)
+
+      if (selected && selected.value) return selected.value
+      return ''
+    }
     return {
       url: val('url-or-ip'),
       port: val('port'),
       websocketPort: val('websocket-port'),
       context: val('context'),
-      stream: val('stream'),
+      stream: hasClass(this.fieldForPartialID('stream'), 'hidden') ? selectedVal('vod-stream') : val('stream'),
       isCluster: this.fieldForPartialID('cluster').field.checked
     }
   }
