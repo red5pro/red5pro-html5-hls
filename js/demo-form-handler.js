@@ -40,7 +40,7 @@ class DemoFormHandler extends FormHandler {
   constructor (form, submit) {
     super(form, submit)
 
-    this.ipInput = document.querySelector('#stream-settings-url-or-ip-label')
+    this.ipInput = document.querySelector('#stream-settings-url-or-ip')
     this.portInput = document.querySelector('#stream-settings-port')
     this.contextInput = document.querySelector('#stream-settings-context')
 
