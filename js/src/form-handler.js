@@ -94,7 +94,7 @@ class FormHandler extends CustomEventTarget {
       port: val('port'),
       websocketPort: val('websocket-port'),
       context: val('context'),
-      stream: hasClass(this.fieldForPartialID('stream'), 'hidden') ? selectedVal('vod-stream') : val('stream'),
+      stream: hasClass(this.fieldForPartialID('stream').field, 'hidden') ? selectedVal('vod-stream') : val('stream'),
       isCluster: this.fieldForPartialID('cluster').field.checked
     }
   }
