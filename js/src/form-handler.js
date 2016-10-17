@@ -85,7 +85,7 @@ class FormHandler extends CustomEventTarget {
     const val = this.valueForPartialID.bind(this)
     const selectedVal = (partialID) => {
       const field = self.fieldForPartialID(partialID)
-      const selected = field.field.item(field.selectedIndex)
+      const selected = field.field.item(field.field.selectedIndex)
 
       if (selected && selected.value) return selected.value
       return ''
