@@ -119,7 +119,7 @@ class DemoVideoHandler extends VideoHandler {
     const url = obj.url.replace(/\/$/, '')
 
     if (!obj.isCluster) {
-      return `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
+      return /^http/i.test(obj.stream) ? obj.stream : `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
     } else {
       return `${url}:${obj.port}/cluster`
     }

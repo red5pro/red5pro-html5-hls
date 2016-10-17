@@ -125,7 +125,7 @@ class DemoFormHandler extends FormHandler {
     const self = this
     const ip = this.ipInput.value || 'localhost'
     const port = this.portInput.value || '5080'
-    const context = this.contextInput.value || 'vod'
+    const context = this.contextInput.value || 'live'
     const baseURL = `http://${ip}:${port}/${context}/`
     const protocol = window.location.protocol.replace(/:$/, '')
     const playlistsServletURL = `${protocol}://${ip}:${port}/${context}/playlists`
