@@ -25,10 +25,10 @@ class DemoSocketHandler extends SocketHandler {
 
   //  As the form is being typed in, update our preview URL
   onInputChange (obj) {
-    const url = obj.url.replace(/\/$/, '')
+    const url = obj.isVOD ? obj.stream : obj.url.replace(/\/$/, '')
     const socketURL = url.replace(/^https?:\/\//i, '')
 
-    this.preview.innerHTML = obj.isVOD ? '' : `ws://${socketURL}:${obj.websocketPort}/metadata/${obj.context}/${obj.stream}`
+    this.preview.innerHTML = obj.isVOD ? `ws://${socketURL}` : `ws://${socketURL}:${obj.websocketPort}/metadata/${obj.context}/${obj.stream}`
   }
 
   //  When the form has been submitted, close (if necessary) and reconnect our websocket
@@ -37,7 +37,7 @@ class DemoSocketHandler extends SocketHandler {
       return
     }
 
-    const url = obj.url.replace(/\/$/, '').replace(/^(?!http(?:s)?:\/\/)(.)/i, 'http://$1')
+    const url = /^http/i.test(obj.stream) ? obj.stream : obj.url.replace(/\/$/, '').replace(/^(?!http(?:s)?:\/\/)(.)/i, 'http://$1')
     const socketURL = url.replace(/^https?:\/\//i, '')
 
     if (this.socket) {
