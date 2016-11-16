@@ -54,6 +54,7 @@ class SocketHandler extends CustomEventTarget {
   }
 
   close () {
+    this.socket.close()
     this.onclose({})
   }
 }
