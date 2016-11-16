@@ -24,7 +24,9 @@ class DemoVideoSizeCache {
   }
 
   updateRawSize (w, h) {
-    ;[this.rawWidth, this.rawHeight].forEach((x) => x.previous = x.current)
+    [this.rawWidth, this.rawHeight].forEach((x) => {
+      x.previous = x.current
+    })
     this.rawWidth.current = w
     this.rawHeight.current = h
   }
