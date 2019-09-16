@@ -24,7 +24,9 @@ class DemoVideoSizeCache {
   }
 
   updateRawSize (w, h) {
-    ;[this.rawWidth, this.rawHeight].forEach((x) => x.previous = x.current)
+    [this.rawWidth, this.rawHeight].forEach((x) => {
+      x.previous = x.current
+    })
     this.rawWidth.current = w
     this.rawHeight.current = h
   }
@@ -119,7 +121,7 @@ class DemoVideoHandler extends VideoHandler {
     const url = obj.url.replace(/\/$/, '')
 
     if (!obj.isCluster) {
-      return `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
+      return /^http/i.test(obj.stream) ? obj.stream : `${url}:${obj.port}/${obj.context}/${obj.stream}.m3u8`
     } else {
       return `${url}:${obj.port}/cluster`
     }
